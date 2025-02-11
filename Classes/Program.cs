@@ -58,6 +58,27 @@ lineOfCredit.MakeDeposit(150m, DateTime.Now, "Partial restoration on repairs");
 lineOfCredit.PerformMonthEndTransactions();
 Console.WriteLine(lineOfCredit.GetAccountHistory());
 
+// Test the LineOfCreditAccount class with a CreditLine
+var accountWithCreditLine = new LineOfCreditAccount("credit card", 0, 500, 1000);
+accountWithCreditLine.MakeWithdrawal(250m, DateTime.Now, "New clothes");
+accountWithCreditLine.MakeWithdrawal(500m, DateTime.Now, "Laptop for school");
+accountWithCreditLine.MakeDeposit(50m, DateTime.Now, "Monthly payment");
+accountWithCreditLine.PerformMonthEndTransactions();
+Console.WriteLine(accountWithCreditLine.GetAccountHistory());
+
+// Attempt to exceed the CreditLine ammount
+try
+{
+    decimal withdrawalAmount = 300;
+    accountWithCreditLine.CheckCreditLine(withdrawalAmount);
+    accountWithCreditLine.MakeWithdrawal(withdrawalAmount, DateTime.Now, "Attempt to exceed credit line amount");
+}
+catch (InvalidOperationException e)
+{
+    Console.WriteLine("Exception caught trying to overdraw");
+    Console.WriteLine(e.ToString());
+}
+
 
 
 

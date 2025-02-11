@@ -8,10 +8,20 @@ namespace Classes
 {
     public class LineOfCreditAccount : BankAccount
     {
-        public LineOfCreditAccount(string name, decimal initialBalance, decimal creditLimit) : base(name, initialBalance, -creditLimit)
-        { 
+        public LineOfCreditAccount(string name, decimal initialBalance, decimal creditLimit, decimal? creditLine = null) : base(name, initialBalance, -creditLimit)
+        {
+            CreditLine = creditLine;
         }
 
+        public decimal? CreditLine { get; set; }
+
+        public void CheckCreditLine(decimal amount)
+        { 
+            if (CreditLine.HasValue && (Balance - amount) < -CreditLine.Value)
+            {
+                throw new ArgumentOutOfRangeException("Transaction denied! Credit line exceeded!");
+            }
+        }
         protected override Transaction? CheckWithdrawalLimit(bool isOverdrawn) =>
             isOverdrawn
             ? new Transaction(-20, DateTime.Now, "Apply overdraft fee")
