@@ -1,4 +1,5 @@
 ﻿using Classes;
+using System.Security.Principal;
 
 var account = new BankAccount("Justin Harder", 1000);
 Console.WriteLine($"Account {account.Number} was created for {account.Owner} with {account.Balance} initial balance.");
@@ -66,6 +67,15 @@ accountWithCreditLine.MakeDeposit(50m, DateTime.Now, "Monthly payment");
 accountWithCreditLine.PerformMonthEndTransactions();
 Console.WriteLine(accountWithCreditLine.GetAccountHistory());
 
+// Test the CertificateOfDepositAccount class
+var cdAccount = new CertificateOfDepositAccount("CD Account", 5000, 12, 0.05m);
+Console.WriteLine($"CD Account created with balance: {cdAccount.Balance}");
+cdAccount.MakeDeposit(1000, DateTime.Now, "Additional deposit");
+Console.WriteLine($"After deposit: {cdAccount.Balance}");
+cdAccount.MakeWithdrawal(2000, DateTime.Now, "Early withdrawal"); // Attempt an early withdrawal before maturity
+cdAccount.ApplyMaturityInterest(); // Simulate the term completion
+Console.WriteLine(cdAccount.GetAccountHistory());
+
 // Attempt to exceed the CreditLine ammount
 try
 {
@@ -78,6 +88,8 @@ catch (InvalidOperationException e)
     Console.WriteLine("Exception caught trying to overdraw");
     Console.WriteLine(e.ToString());
 }
+
+
 
 
 
